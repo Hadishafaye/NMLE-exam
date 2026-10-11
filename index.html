@@ -353,9 +353,11 @@ function answered(){return Object.keys(S.ans).length;}
 function stats(){
   var r=0,w=0,k=0,per={};
   S.ids.forEach(function(n){
-    var q=byN[n],a=S.ans[n],p=per[q.s]||(per[q.s]={r:0,t:0});
+    var q=byN[n],a=S.ans[n],p=per[q.s]||(per[q.s]={r:0,w:0,k:0,t:0});
     p.t++;
-    if(a==null)k++;else if(a===q.a){r++;p.r++;}else w++;
+    if(a==null){k++;p.k++;}
+    else if(a===q.a){r++;p.r++;}
+    else{w++;p.w++;}
   });
   return {r:r,w:w,k:k,per:per,total:S.ids.length};
 }
@@ -602,14 +604,44 @@ app.addEventListener("change",function(e){
 });
 
 /* ---------- Name, saved results, hidden results page (#results) ---------- */
-var NKEY="nmle-name-v1",RKEY="nmle-results-v1",SHEET_URL="https://script.google.com/macros/s/AKfycbz2i1CkyG6v8lj11eO1w6ibmr-5vb1uom7f__IM8CvRJyuZnwLXkQP5C1Sdc7GXbHzk/exec";
+var NKEY="nmle-name-v1",RKEY="nmle-results-v1",SHEET_URL="https://script.google.com/macros/s/AKfycbwIHxQaTrVw3v7SHtum8pUs1t1nJsZjgFGSyo-fRW9_f6WdO_pffzFO90evdV0RXkbs/exec";
 var NAME="";try{NAME=localStorage.getItem(NKEY)||"";}catch(e){}
 function rows(){try{return JSON.parse(localStorage.getItem(RKEY))||[];}catch(e){return [];}}
 function record(){
-  var st=stats(),row={name:NAME.trim(),score:st.r,total:st.total,wrong:st.w,skipped:st.k,pct:Math.round(st.r/st.total*100),mode:S.cfg.mode,seconds:S.elapsed,date:new Date().toISOString()};
-  row.subjects={};Object.keys(st.per).forEach(function(k){row.subjects[SUBJ[k][0]]=st.per[k].r+"/"+st.per[k].t;});
+  var st=stats(),subjectScores={};
+  Object.keys(st.per).forEach(function(k){
+    var p=st.per[k];
+    subjectScores[SUBJ[k][0]]={
+      correct:p.r,
+      wrong:p.w,
+      skipped:p.k,
+      total:p.t,
+      percent:Math.round(p.r/p.t*100)
+    };
+  });
+  var row={
+    name:NAME.trim(),
+    score:st.r,
+    total:st.total,
+    wrong:st.w,
+    skipped:st.k,
+    pct:Math.round(st.r/st.total*100),
+    mode:S.cfg.mode,
+    seconds:S.elapsed,
+    date:new Date().toISOString(),
+    subjectScores:subjectScores
+  };
   try{var a=rows();a.push(row);localStorage.setItem(RKEY,JSON.stringify(a));}catch(e){}
-  if(SHEET_URL){try{fetch(SHEET_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify(row)});}catch(e){}}
+  if(SHEET_URL){
+    try{
+      fetch(SHEET_URL,{
+        method:"POST",
+        mode:"no-cors",
+        headers:{"Content-Type":"text/plain"},
+        body:JSON.stringify(row)
+      });
+    }catch(e){}
+  }
 }
 app.addEventListener("input",function(e){
   if(e.target.id!=="pname")return;
