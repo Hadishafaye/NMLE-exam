@@ -1,0 +1,643 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>NMLE Practice Exam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800&family=IBM+Plex+Mono:wght@500&family=Vazirmatn:wght@400;500;700&display=swap">
+<style>
+/* Layout: one narrow column, like a paper answer sheet. Setup screen, then a scrolling sheet of questions with OMR-style bubbles. */
+:root{
+  --bg:#EDF1F3; --surface:#FFFFFF; --ink:#14212A; --muted:#566772; --line:#D2DBE1; --soft:#E3E9ED;
+  --accent:#0A6C77; --on-accent:#FFFFFF;
+  --good:#17794A; --good-bg:#E1F3E8; --bad:#B2362D; --bad-bg:#FAE6E3; --warn:#7D5200; --warn-bg:#FBF0D9;
+  --f-ui:"Archivo","Vazirmatn",system-ui,sans-serif;
+  --f-fa:"Vazirmatn","Archivo",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F171C; --surface:#172229; --ink:#E6EEF2; --muted:#93A4AF; --line:#2B3B45; --soft:#1F2D36;
+    --accent:#4DBFCB; --on-accent:#06262A;
+    --good:#5CD18F; --good-bg:#13301F; --bad:#F2918A; --bad-bg:#3A1B19; --warn:#F0C26A; --warn-bg:#33270E;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F171C; --surface:#172229; --ink:#E6EEF2; --muted:#93A4AF; --line:#2B3B45; --soft:#1F2D36;
+  --accent:#4DBFCB; --on-accent:#06262A;
+  --good:#5CD18F; --good-bg:#13301F; --bad:#F2918A; --bad-bg:#3A1B19; --warn:#F0C26A; --warn-bg:#33270E;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;-webkit-text-size-adjust:100%}
+.wrap{max-width:46rem;margin-inline:auto;padding-inline:16px;padding-block:22px 72px}
+h1,h2,p{margin:0}
+button{font:inherit;color:inherit}
+.eyebrow{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+/* Setup */
+.hero{display:flex;flex-direction:column;gap:10px;padding-block:8px 20px}
+.hero h1{font-size:clamp(30px,8vw,44px);line-height:1.05;font-weight:800;letter-spacing:-.02em;text-wrap:balance}
+.hero p{color:var(--muted);max-width:34rem}
+.motif{display:flex;gap:8px;margin-block:2px 4px}
+.motif .bub{width:30px;height:30px;font-size:13px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:18px}
+.field{display:flex;flex-direction:column;gap:8px;min-width:0}
+.field>.lbl{font-size:13px;font-weight:700}
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:10px}
+.mode{border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--bg);cursor:pointer;text-align:start;display:flex;flex-direction:column;gap:2px}
+.mode b{font-size:15px}
+.mode span{font-size:13px;color:var(--muted)}
+.mode[aria-pressed="true"]{border-color:var(--accent);background:var(--surface);box-shadow:0 0 0 1px var(--accent) inset}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1.5px solid var(--line);background:var(--bg);border-radius:999px;padding:6px 12px;cursor:pointer;display:inline-flex;align-items:baseline;gap:6px;font-size:13px}
+.chip small{font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip[aria-pressed="true"] small{color:inherit;opacity:.75}
+.seg{display:inline-flex;flex-wrap:wrap;gap:6px}
+.seg button{border:1.5px solid var(--line);background:var(--bg);border-radius:8px;padding:7px 14px;cursor:pointer;font-size:13px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.seg button:disabled{opacity:.4;cursor:not-allowed}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));gap:18px}
+select{font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:8px;padding:7px 10px;max-width:100%}
+.btn{border:1.5px solid var(--line);background:var(--surface);border-radius:9px;padding:9px 16px;cursor:pointer;font-weight:500}
+.btn:hover{border-color:var(--ink)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:700}
+.btn.primary:hover{filter:brightness(1.06)}
+.btn.big{padding:13px 22px;font-size:16px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.ghost{background:transparent}
+.link{background:none;border:0;padding:2px 4px;cursor:pointer;color:var(--muted);text-decoration:underline;font-size:12px}
+.resume{background:var(--warn-bg);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between}
+.resume p{min-width:0}
+.fine{font-size:12.5px;color:var(--muted);margin-top:16px;max-width:38rem}
+
+/* Sticky exam bar */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;margin-inline:-16px;padding:10px 16px 0;background:var(--surface);border-bottom:1px solid var(--line)}
+.bar-row{display:flex;align-items:center;gap:12px;justify-content:space-between}
+.prog{display:flex;align-items:baseline;gap:6px;min-width:0;white-space:nowrap}
+.prog b{font-family:var(--f-mono);font-size:20px;font-variant-numeric:tabular-nums}
+.prog span{font-size:13px;color:var(--muted)}
+.clock{font-family:var(--f-mono);font-size:15px;font-variant-numeric:tabular-nums}
+.clock.low{color:var(--bad)}
+.track{height:4px;background:var(--soft);margin-top:10px;margin-inline:-16px}
+.track i{display:block;height:100%;width:0;background:var(--accent)}
+.ask{padding-block:12px 14px;display:flex;flex-direction:column;gap:10px}
+.ask[hidden]{display:none}
+
+/* Questions */
+.list{display:flex;flex-direction:column;gap:14px;margin-top:16px}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px;scroll-margin-top:96px}
+.qh{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
+.qno{font-family:var(--f-mono);font-size:15px;font-weight:500;background:var(--ink);color:var(--bg);border-radius:6px;padding:1px 8px;min-width:2.2em;text-align:center}
+.tag{font-size:12px;color:var(--muted)}
+.src{font-family:var(--f-mono);font-size:11px;color:var(--muted);margin-inline-start:auto}
+.badge{font-size:12px;font-weight:700;border-radius:6px;padding:1px 8px}
+.badge.right{background:var(--good-bg);color:var(--good)}
+.badge.wrong{background:var(--bad-bg);color:var(--bad)}
+.badge.skip{background:var(--soft);color:var(--muted)}
+.stem{font-family:var(--f-fa);font-size:17px;line-height:1.9;font-weight:500;text-align:right}
+.opts{display:flex;flex-direction:column;gap:6px}
+.opt{position:relative;display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:10px;border:1.5px solid transparent;cursor:pointer;font-family:var(--f-fa);font-size:16px;line-height:1.7}
+.opt:hover{background:var(--bg)}
+.opt input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.opt .txt{min-width:0;overflow-wrap:anywhere}
+.opt .txt[dir="ltr"]{text-align:left}
+.opt .txt[dir="rtl"]{text-align:right}
+.bub{flex:none;width:34px;height:34px;border-radius:50%;border:1.8px solid var(--muted);display:inline-flex;align-items:center;justify-content:center;font-family:var(--f-fa);font-size:15px;font-weight:700;color:var(--muted);background:transparent;transition:background .12s,color .12s,border-color .12s}
+.opt.sel .bub{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.opt.sel{background:var(--soft)}
+.opt:has(input:focus-visible) .bub{outline:3px solid var(--accent);outline-offset:2px}
+.opt.right{background:var(--good-bg);border-color:var(--good)}
+.opt.right .bub{background:var(--good);border-color:var(--good);color:var(--surface)}
+.opt.wrong{background:var(--bad-bg);border-color:var(--bad)}
+.opt.wrong .bub{background:var(--bad);border-color:var(--bad);color:var(--surface)}
+.opt.locked{cursor:default}
+.opt.locked:hover{background:inherit}
+.opt.right:hover{background:var(--good-bg)}.opt.wrong:hover{background:var(--bad-bg)}
+.note{font-size:13px;background:var(--warn-bg);color:var(--warn);border-radius:8px;padding:8px 12px}
+.note b{font-weight:700}
+.end{display:flex;flex-direction:column;gap:8px;align-items:flex-start;margin-top:18px}
+.end p{font-size:13px;color:var(--muted)}
+
+/* Results */
+.result{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:16px;margin-top:6px}
+.score{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 12px}
+.score .big{font-family:var(--f-mono);font-size:56px;line-height:1;font-weight:500}
+.score .of{font-family:var(--f-mono);font-size:20px;color:var(--muted)}
+.score .pct{font-size:20px;font-weight:800;margin-inline-start:auto}
+.sub{color:var(--muted)}
+.subj{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr) auto;gap:8px 12px;align-items:center;font-size:13px}
+.subj .nm{min-width:0;overflow-wrap:anywhere}
+.subj .tk{height:8px;border-radius:4px;background:var(--soft);overflow:hidden}
+.subj .tk i{display:block;height:100%;background:var(--accent)}
+.subj .tk i.low{background:var(--bad)}
+.subj .ct{font-family:var(--f-mono);font-variant-numeric:tabular-nums;text-align:end}
+.hint{font-size:13px;color:var(--muted)}
+.nameIn{width:100%;min-height:44px;padding:0 12px;border-radius:9px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font:inherit}
+.nameErr{font-size:13px;color:var(--bad);min-height:0}
+.list[data-filter="missed"] .q[data-res="right"]{display:none}
+
+@media (max-width:480px){
+  .stem{font-size:16px}
+  .opt{font-size:15.5px;gap:10px;padding:7px 6px}
+  .panel,.result{padding:16px}
+  .score .big{font-size:46px}
+  .src{margin-inline-start:0}
+}
+@media (prefers-reduced-motion:reduce){.bub{transition:none}}
+</style>
+
+<div class="wrap" id="app"></div>
+
+<script>
+(function(){
+"use strict";
+
+var KEY="nmle12-session-v1";
+
+var SUBJ={
+  gs:["General Surgery","جراحی عمومی"],
+  im:["Internal Medicine","داخله عمومی"],
+  ped:["Pediatrics","داخله اطفال"],
+  ph:["Pharmacology","فارماکولوژی"],
+  path:["Pathology","پتالوژی"],
+  mic:["Microbiology","مایکروبیولوژی"],
+  an:["Anatomy","اناتومی"],
+  phy:["Physiology","فزیولوژی طب"],
+  ob:["Obstetrics & Gynecology","نسایی ولادی"],
+  neuro:["Neurology & Psychiatry","داخله اعصاب و روانی"],
+  ent:["ENT","گوش، گلو و بینی"],
+  forn:["Forensic Medicine","عدلی طب"],
+  eth:["Medical Ethics","اخلاق طبابت"],
+  pub:["Public Health","صحت عامه"]
+};
+
+/* [PDF number, subject, stem, options, correct option (1-4), optional key-check note] */
+var RAW=[
+[1,"ph","کدام یک از دواهای زیر یک انتی‌هیستامین غیر مسکن (Non-sedative) است؟",["Dimenhydramine","Cinnarizine","Dimenhydrinat","Loratidine"],4],
+[2,"phy","تأثیر پاراسمپاتیک بالای قلب عبارت است از:",["Negative chronotropic","Positive chronotropic","Positive inotropic","Positive dromatropic"],1],
+[3,"gs","از مراقبت‌های بعد از عملیات، کدام مرحله شامل آن نمی‌باشد؟",["مرحله نقاهت","مرحله بین‌البینی","مرحله فوری بعد از انستیزی","مرحله تشخیص اندوسکوپی"],4],
+[4,"ph","دوا یا ادویه Losartan به کدام گروپ دواها تعلق دارد؟",["ARBs","Diuretics","ACEI","Steroids"],1],
+[5,"mic","کدام حالت سبب رُخ دادن گاز گانگرین می‌گردد؟",["زخم بسته","زخم باز","انساج تهاجمی","زخم عمیق"],1],
+[6,"mic","در مورد مورفولوژی باکتری Vibrio cholerae کدام جمله درست است؟",["اسپور تولید می‌کند","فلاجل ندارد","باکتری گرام مثبت است","باکتری گرام منفی است"],4],
+[7,"path","اجسام اشوف (Aschoff Bodies) علامه تشخیصیه قطعی کدام بیماری است؟",["Infective Endocarditis","Myxomatous Mitral Valve","Acute Rheumatic Carditis","Calcific Aortic Stenosis"],3],
+[8,"gs","ارتباط غیرطبیعی بین دو سطح اپیتلیالی عبارت است از:",["زخم بستر","سینوس","قرحه","فیستول"],4],
+[9,"an","عضله Lateral rectus چشم توسط کدام عصب تعصیب می‌گردد؟",["Optic Nerve","Oculomotor Nerve","Abducent Nerve","Trigeminal Nerve"],3],
+[10,"path","کدام یک از امراض زیر مربوط امراض انسدادی (Obstruction) ریوی نمی‌باشد؟",["امفزیما","نومونیا (سینه‌بغل)","برانکایتس مزمن","استما"],2],
+[11,"gs","علامه Battle sign دلالت بر شکستگی کدام قسمت قاعده جمجمه (کاسه سر) می‌کند؟",["بخش خلفی","شکستگی قاعده جمجمه","بخش مرکزی","بخش قدامی"],4,"The PDF key says anterior fossa. Battle sign is usually taught as a sign of a posterior (or middle) fossa fracture, so check your textbook."],
+[12,"neuro","موود (مزاج) نارمل به چه نام یاد می‌شود؟",["Euthymia","Alexithymia","Cyclothymia","Dysthymia"],1],
+[13,"ped","علامه Head drop sign در کدام شکل کلینیکی پولیو دیده می‌شود؟",["Abortive poliomyelitis","Paralytic poliomyelitis","Non paralytic poliomyelitis","Spinal paralytic poliomyelitis"],2],
+[14,"path","خصوصیت خبیث بودن تومور عبارت است از:",["شباهت با نسج اصلی دارد","محدود و موضعی می‌باشد","توانایی انتشار به نواحی دوردست را دارد","نمو و رشد تدریجی دارد"],4,"The PDF key marks option 4. Textbooks usually give the ability to spread to distant sites (option 3) as the defining malignant feature."],
+[15,"ped","خصوصیت پتالوژیک ژیروی (زردی) در نوزاد چیست؟",["در اطفال صحت‌مند دیده می‌شود","در ۲۴ ساعت اول زندگی آشکار می‌گردد","میزان بلیروبین خون به بیش از 5 mg/dl در ۲۴ ساعت افزایش می‌یابد","بعد از ۲۴ ساعت اول زندگی آشکار می‌گردد"],2],
+[16,"ent","در Atrophic Rhinitis، ادویه Streptomycin به کدام منظور استفاده می‌شود؟",["کم کردن افرازات بینی","کم کردن بوی بد بینی","ترمیم غشای مخاطی","ترمیم غدوات مصلی"],2],
+[17,"ped","یک نوزاد بعد از ولادت گریه نمی‌کند؛ بعد از ۳۰ ثانیه احیا، هنوز هم اپنیا (عدم تنفس) دارد و ضربان قلبش زیر ۸۰ در دقیقه است. اقدام بعدی شما چیست؟",["Chest compression (مساج صدری)","Positive pressure ventilation (تهویه با فشار مثبت)","دادن Epinephrine","گرم کردن، باز کردن لاروهای هوایی و Tactile stimulation (تحریک لمسی)"],2],
+[18,"forn","کدام یکی از علائم زیر نشانه موثق (قطعی) مرگ انسان می‌باشد؟",["ثابت ماندن و فراخ شدن حدقه‌ها","از بین رفتن حسیت و حرکت","عدم احساس نبض","از بین رفتن فعالیت برقی در ECG"],4],
+[19,"mic","باکتری Lacto bacilli بالای pH مهبل (واژن) چه تاثیری دارد؟",["pH مهبل را کم می‌سازد (پایین می‌آورد)","بالای pH مهبل تاثیری ندارد","pH مهبل را هم بلند می‌برد و هم کم می‌سازد","pH مهبل را کم می‌سازد"],1],
+[20,"path","در کدام یک از کم‌خونی‌های زیر، کریوات سرخ به شکل هایپوکرومیک مایکروسایتیک دیده می‌شوند؟",["Heridatory Spherocytic Anemia","Folic Acid Deficiency Anemia","Iron Deficiency Anemia","Vit B12 Deficiency Anemia"],3],
+[21,"im","بیماری Polycythemia Vera با بیماری‌های زیر تشخیص تفریقی می‌گردد، به استثنای:",["زندگی در ارتفاعات بلند","کم‌خونی فقر آهن","کم‌خونی شدید","بیماری ولادی قلب"],4],
+[22,"forn","وقتی شخصی مریض نباشد اما تمارض (تمثیل اعراض بیماری) کند، به این حالت چه می‌گویند؟",["Sadism","Simulation (تمارض)","Dissimulation","Kleptomania"],2],
+[23,"im","بیماری Systemic Lupus Erythematosus در جلد به کدام شکل کلینیکی تظاهر می‌کند؟",["ترومبوز رگ‌های خورد","Spider nevi","Eczema","Erythematous rash (رَش سرخ‌رنگ)"],4],
+[24,"an","انشعاب قصبه‌الریه (Bifurcation of Trachea) با کنار سفلی کدام فقره مطابقت دارد؟",["T12","T4","L4","T4"],2],
+[25,"ph","کدام یک از دواهای زیر مربوط نسل سوم سفالوسپورین‌ها می‌باشد؟",["Cefixime","Cefazoline","Cefuroxime","Cefepime"],1],
+[26,"im","نبض Anacrotic pulse در کدام بیماری لمس می‌گردد؟",["تضیق دسام ریوی","تضیق دسام میترال","تضیق دسام ابهر","عدم کفایه دسام ابهر"],2,"The PDF key says mitral stenosis. Anacrotic pulse is classically linked to aortic stenosis, so check your textbook."],
+[27,"im","اگر علت فشار بلند خون واضح و ثانوی معلوم نباشد، به کدام نام یاد می‌گردد؟",["Malignant Hypertension","Resistant Hypertension","Secondary Hypertension","Primary Hypertension"],4],
+[28,"gs","در هنگام ترضیض (آسیب) فقرات قطنی، کدام کمک اولی انجام می‌شود؟",["استفاده از میزاب (Splint) برای تثبیت تمام وجود","عدم استفاده از میزاب برای تثبیت تمام وجود","گرم نگهداشتن مصدوم","استراحت دادن به مصدوم در وضعیت بی‌حرکت"],4],
+[29,"gs","کدام مورد زیر جز ترضیضات / جراحات جلد سر یا SCALP محسوب نمی‌شود؟",["Abrasion","Laceration","Concussion","Hematoma"],3],
+[30,"im","کدام مورد زیر سبب Exudative Pleural Effusion می‌گردد؟",["تبرکلوز ریوی (سل)","سیروز جگر (کبد)","سندرم نفروتیک","عدم کفایه قلب"],1],
+[31,"ph","در مورد دوای Monteleukast کدام گزینه درست است؟",["Beta-1-receptor agonist","نهی‌کننده انزایم ۵-لیپواکسی‌جناز","M3-receptor agonist","Cistenayle leukutraine receptor inhibitor"],4],
+[32,"im","معمول‌ترین عامل انتان مجاری ادراری عبارت است از:",["Klebsiella","Staphylococcus","E. coli","Proteus"],3],
+[33,"im","نیوروپتی محیطی در جریان کدام نوع کم‌خونی به میان می‌آید؟",["Megaloblastic Anemia","Aplastic Anemia","Hemolytic Anemia","Iron Deficiency Anemia"],1],
+[34,"im","در Acute coronary syndrome کدام بیماری شامل نمی‌باشد؟",["Unstable angina","ST elevated MI","Non ST elevated MI","Heart failure (عدم کفایه قلب)"],4],
+[35,"gs","کارسینوما در انساج اسکارهای کهنه به کدام نام یاد می‌شود؟",["TB Ulcer","Bed Sore","Rodent Ulcer","Marjolin Ulcer"],4],
+[36,"path","استمای برانشیال در نتیجه کدام نوع فرط حساسیت به میان می‌آید؟",["Type III Hypersensitivity","Type II Hypersensitivity","Type IV Hypersensitivity","Type I Hypersensitivity"],4],
+[37,"im","در کدام یک از امراض زیر Clubbing (چماقی شدن انگشتان) رخ نمی‌دهد؟",["برانکایتس حاد","امپیما","تبرکلوز ریوی","آبسه ریوی"],1],
+[38,"ped","معمول‌ترین اختلاط Perinatal asphyxia کدام است؟",["Necrotizing enterocolitis","Respiratory distress syndrome","Hypoxic-Ischemic encephalopathy","Acute tubular necrosis"],3],
+[39,"im","معمول‌ترین سبب Community acquired pneumonia عبارت است از:",["انتانات ویروسی","انتانات قارچی","مایکوپلازما","استرپتوکوکس (Streptococcus)"],4],
+[40,"mic","در مورد مرحله ثبات (Stationary phase) رشد باکتری‌ها کدام جمله درست است؟",["در این مرحله میزان مرگ باکتری‌ها افزایش می‌یابد","در این مرحله تولید باکتری‌ها کم می‌شود","در این مرحله تولید باکتری‌های جدید زیاد می‌شود","در این مرحله تعداد حجرات جدید و حجرات مرده مساوی می‌باشد"],4],
+[41,"neuro","Acute subdural Hematoma (خونریزی حاد زیر دورا) در سی‌تی اسکن چه نمایی دارد؟",["نمای عصبی‌مانند","نمای کروی","نمای ستاره‌ای","نمای هلال‌مانند (Crescent-shaped)"],4],
+[42,"mic","انتروتوکسین باکتری Vibrio cholerae بالای کدام حجرات روده تأثیر دارد؟",["سویه Cyclic AMP را کم می‌سازد","سویه Cyclic GMP را بلند می‌برد","سویه Cyclic GMP را کم می‌سازد","سویه Cyclic AMP را بلند می‌برد"],4],
+[43,"an","برجستگی Deltoid tuberosity در کدام استخوان موقعیت دارد؟",["Radius","Humerus","Ulna","Femur"],2],
+[44,"gs","به منظور تداوی Tension pneumothorax، معمولاً سوزن در کدام فاصله بین‌الضلعی داخل می‌گردد؟",["دومین فاصله بین‌الضلعی در خط متوسط کلاویکولار","پنجمین فاصله بین‌الضلعی در خط متوسط ابطی","ششمین فاصله بین‌الضلعی در خط متوسط کلاویکولار","هشتمین فاصله بین‌الضلعی در خط متوسط کلاویکولار"],1],
+[45,"im","حالت Pneumaturia در جریان کدام بیماری رُخ می‌دهد؟",["فیستول بین مثانه و کولون","انتانات مجاری ادراری","Pyelonephritis (التهاب حویضه و کلیه)","Cystitis (التهاب مثانه)"],1],
+[46,"ent","بیماری Atrophic Rhinitis به چند شکل دیده می‌شود؟",["سه شکل","چهار شکل","دو شکل","پنج شکل"],3],
+[47,"ped","یک نوزاد پلک می‌زند و حرکاتی شبیه به آب‌بازی دارد؛ این حالت نشان‌دهنده کدام نوع اختلاج (Seizure) است؟",["Myoclonic","Clonic","Tonic","Subtle"],4],
+[48,"pub","شیرین‌ترین قند در بین مونوپلی‌سکرایدها عبارت است از:",["Fructose","Glucose","Sucrose","Galactose"],1],
+[49,"phy","مایع داخل چشم به چند نوع است؟",["۵ نوع","۲ نوع","۴ نوع","۳ نوع"],2],
+[50,"gs","کشیدن سنگ حویضه کلیه به منظور پاک‌سازی آن به کدام نام یاد می‌شود؟",["Nephrostomy","Nephrectomy","PCNL","Pyelotomy"],3],
+[51,"an","کانال پانکراس (Pancreatic duct) به کدام قسمت دوازدهه (اثنا عشر) داخل می‌گردد؟",["Transverse part (بخش معترضه)","Superior part (بخش علوی)","Descending part (بخش نازله / نزولی)","Ascending part (بخش صاعده)"],3],
+[52,"mic","کدام بخش از بدن انسان دارای فلورای نارمل نمی‌باشد؟",["زړه (قلب)","جلد","خون","دماغ"],2,"The PDF key marks skin. Skin does carry normal flora (see the Staphylococcus epidermidis question); the heart, blood and brain are normally sterile."],
+[53,"forn","بیرون کشیدن جسد مرده از قبر به کدام نام یاد می‌شود؟",["Putrefaction (تفسخ)","Exhumation (نبش قبر)","Mumification","Autopsy"],2],
+[54,"im","معمول‌ترین علت Mitral Stenosis عبارت است از:",["آفات ولادی","تضیق ولادی دسام میترال","روماتیزم قلبی","روماتیزم مفصلی"],3],
+[55,"ped","عرض ابتدایی کمبود ویتامین A کدام است؟",["Bitot's spot","Keratomalacia","Photophobia","شب‌کوری"],4],
+[56,"phy","پیس‌میکر (Pacemaker) اصلی و اساسی قلب عبارت است از:",["Purkinje fibers","SA-node","AV-bundle","AV-node"],2],
+[57,"mic","کدام یک از باکتری‌های زیر جزئی از فلورای نارمل جلد محسوب می‌شود؟",["Lacto bacillus","Salmonella","Staphylococcus epidermidis","E. coli"],3],
+[58,"im","خونریزی شدید و ضیاع مایعات سبب کدام حالت از ازوتیما می‌گردد؟",["Prerenal Azotemia","Post Renal Azotemia","CRF","Renal Azotemia"],1],
+[59,"im","کدام مورد زیر شامل معیارهای عمده (Major Criteria) تب روماتیزمی نمی‌باشد؟",["Migratory polyarthritis","Erythema marginatum","Arthralgia","Carditis"],3],
+[60,"ped","طفلی به دلیل اسهالات به شفاخانه آورده شده است؛ طفل بسیار بی‌قرار است، تشنه است و با ولع زیاد آب می‌نوشد. از نظر IMNCI این طفل چه درجه از دی‌هایدریشن (کم‌آبی) دارد؟",["No sign of dehydration","Some dehydration","Hypotonic dehydration","Severe dehydration"],2],
+[61,"im","کدام دوا در تداوی اسهالات IBS شامل می‌باشد؟",["Sertraline","Aspirin","Fluoxetine","Amitriptyline"],4],
+[62,"im","در معاینات لابراتواری سندرم کوشینگ (Cushing Syndrome) کدام مورد دریافت نمی‌گردد؟",["Hyperkalemia","Leukocytosis","Lymphopenia","Glucosuria"],1],
+[63,"forn","کدام روش سقط (Abortion) جز روش‌های موضعی محسوب نمی‌گردد؟",["میخانیکی","برقی","حرارتی","Ergotamine"],4],
+[64,"gs","سرحد سفلی کانال انگوئینال توسط کدام ساختار ساخته می‌شود؟",["رباط انگوئینال (Inguinal ligament)","عصب جنیتوفیمورال","قنات ناقل (Vas deferens)","رباط مزدوج (Conjoint tendon)"],1],
+[65,"im","کدام مورد از اختلاطات معمول Peptic ulcer نمی‌باشد؟",["نفوذ قرحه","خونریزی معده و روده","انسداد مجرای خروجی معده","خباثت"],4,"The PDF stem reads «is a common complication». The key (malignancy) only fits «is not a common complication», so it is shown that way here."],
+[66,"gs","در مریضان عملیاتی کدام مورد زیر خطر ترومبوامبولیزم را ندارد؟",["تاریخچه قبلی ترومبوز","سن بالاتر از ۴۵ سال","سرطان","موجودیت وزن نارمل بدن"],4],
+[67,"eth","در رابطه بین داکتران کدام جمله درست نمی‌باشد؟",["تحقیر و مسخره کردن همکاران در حضور مریضان","شریک ساختن معلومات به شکل مؤثر و راجع ساختن مریضان","احترام متقابل","آموزش، تدریس و نظارت همکاران"],1],
+[68,"eth","از گزینه‌های زیر، کدام یک جز مکلفیت‌های مریض در برابر پرسونل صحی محسوب نمی‌شود؟",["بادب باشد","پابند به وقت باشد","تعقیب توصیه‌های پرسونل صحی","استفاده از دوای توصیه نشده"],4],
+[69,"im","تشوه Z-deformity در کدام بیماری رُخ می‌دهد؟",["Rheumatoid Arthritis","Endocarditis","Osteoarthritis","Rheumatic Fever"],1],
+[70,"gs","کدام مورد برای هیموستاز (بستن خونریزی) دائمی رگ‌ها به روش کیمیاوی استفاده می‌شود؟",["گره زدن رگ‌ها","تطبیق ادرنالین","تزریق پلازما","استفاده از دیاترمی / الکتروکوتر"],4,"The PDF key says diathermy / electrocautery, which is a thermal method rather than a chemical one. Check the original wording."],
+[71,"gs","بهترین معاینه تشخیصی برای ترومبوز وریدهای عمیق اطراف سفلی کدام است؟",["Duplex (Doppler) ultrasonography","عکس ساده اکسری","ECG","Arteriography"],1],
+[72,"im","کدام مورد زیر از علائم اصغایی (شنیداری) Pleuritis می‌باشد؟",["Crepitation","Pleural friction rub","Ronchi","Wheezing"],2],
+[73,"gs","هرگاه قطب سفلی یک کلیه با قطب علوی کلیه دیگر اتصال ولادی داشته باشد، به کدام نام یاد می‌شود؟",["کلیه عصایی‌شکل (Sigmoid kidney)","کلیه کروی","کلیه ستاره‌ای","کلیه هلالی‌شکل"],1],
+[74,"ph","کدام دوا مربوط به گروپ ادویه‌جات بتا-۲ اگونیست با تأثیر طولانی‌مدت (LABA) نمی‌باشد؟",["Salbutamol","Terbutaline","Salmeterol","Albuterol"],1],
+[75,"ph","انتخاب مناسب دواها در یک نسخه معقول، شامل کدام مرحله می‌باشد؟",["مرحله اول","مرحله پنجم","مرحله دوم","مرحله اول"],4,"Options 1 and 4 read the same in the PDF. The key marks option 4."],
+[76,"an","استخوان Pattela شامل کدام گروپ از استخوان‌ها می‌باشد؟",["Sesamoid bone group","Long bone group","Short bone group","Irregular bone group"],1],
+[77,"ph","ترکیبات دوای کوتریموکسازول (Cotrimoxazole) عبارت است از:",["Sulfamethoxazole + Trimethoprim","Amoxicillin + Clavulanic acid","Sulfamethoxazole + Clavulanic acid","Sulphasalazine + Trimethoprim"],1],
+[78,"gs","انسداد روده که در اصغای آن حرکات حرکی روده موجود نباشد، دلالت بر کدام نوع انسداد روده می‌کند؟",["انسداد فلجی روده (Paralytic ileus)","موجودیت تومور در سیگموئید کولون","انسداد میخانیکی روده","موجودیت انسداد در اثر غلوف"],1],
+[79,"path","باز شدن مجرای ادرار (احلیل) در سطح بطنی یا سفلی (Ventral surface) قضیب به کدام نام یاد می‌شود؟",["Hypospadias","Paraphimosis","Phimosis","Balanitis"],1],
+[80,"gs","در کدام نوع ترضیض (آسیب)، هیماچوریا (وجود خون در ادرار) وجود ندارد؟",["قطع کامل حالب","شقاق شدید کلیه","پارگی (ریپچر) مثانه","ترضیض انشقاقی احلیل"],4],
+[81,"gs","کدام انتی‌سپتیک مجاری ادراری برای تداوی انتانات حاد مثانه (Acute cystitis) از راه دهن استفاده می‌شود؟",["سیپروفلوکساسین","نایتروفورانتوئین (Nitrofurantoin)","کوتریموکسازول","سیفتریاکسون"],2],
+[82,"ent","موجودیت انتان یا التهاب در کدام خالیگاه به نام Ludwig's Angina یاد می‌شود؟",["Pre Vertebral Space","Para Pharyngeal Space","Sub Maxillary Space","Retro Pharyngeal Space"],3],
+[83,"im","کدام دوای زیر باعث تحریک حملات استمای برانشیال (Bronchial Asthma) می‌گردد؟",["PPI","Beta blocker","Amlodipine","SSRI"],2],
+[84,"pub","کدام یک از ویتامین‌های زیر محلول در شحم (چربی) نمی‌باشد؟",["ویتامین B","ویتامین K","ویتامین D","ویتامین A"],1],
+[85,"path","معمول‌ترین تومور سلیم (خوش‌خیم) پستان عبارت است از:",["Fibroadenoma","Sclerosing Adenosis","Paget's Disease of Nipple","Lactating Adenoma"],1],
+[86,"im","کدام گزینه در مورد شکل خفیف Pulmonary Stenosis درست است؟",["بی‌اعراض می‌باشد","شکایت از درد سینه دارد","سینکوپ (غشی) دارد","عسرت تنفس دارد"],1],
+[87,"phy","کدام انتی‌بادی در پاسخ اولی (Primary response) نقش دارد؟",["IgA","IgE","IgD","IgM"],4],
+[88,"gs","در تایروتوکسیکوز کدام علامه مهم موجود می‌باشد؟",["استریا","اگزوفتالمیا (برجستگی چشم)","عدم تحمل گرمی","افزایش اشتها"],4],
+[89,"gs","در سرطان پرمختللی پستان، نمایی که جلد شبیه پوست نارنج می‌شود به کدام نام یاد می‌گردد؟",["Peau-de-orange","Cancer-en-cuirasse","Lymphangiosarcoma","Inflammation"],1],
+[90,"ent","در مورد Tinnitus (وزوز / زنگ زدن گوش) کدام جمله نادرست است؟",["احساس آواز در گوش موجود می‌باشد","در محیط پر شور و ماشور زیاد می‌شود","در محیط خاموش زیاد می‌شود","در حالت اضطراب زیاد می‌شود"],2],
+[91,"gs","کدام یک از مواد زیر انتی‌سپتیک اوکسیدایزنگ ایجنت نمی‌باشد؟",["فینول","بوریک اسید","هایدروجن پر اوکساید","کلورو هگزیدین"],1],
+[92,"im","کدام عرض، لوحه کلینیکی وصفی GERD (استفراغ مری) را تشکیل می‌دهد؟",["Odynophagia","Heart burn (سوزش سر دل)","Chest pain","Dysphagia"],2],
+[93,"path","نکروز اسکیمیک در یک ناحیه به دلیل قطع شدن جریان شریانی به کدام نام یاد می‌شود؟",["Infarction (احتشا)","Thrombosis (ترومبوز)","Hyperemia (هایپریمی)","Congestion (احتقان)"],1],
+[94,"an","قصبهٔ خارجی (Lateral malleolus) توسط کدام استخوان ساخته می‌شود؟",["Talus","Tibia","Fibula","Calcaneus"],3],
+[95,"gs","اسهالات دوام‌دار سبب کدام نوع شوک می‌گردد؟",["شوک کاردیوجینیک","شوک هایپوولیمیک","شوک نیوروجینیک","شوک انافلاکتیک"],2],
+[96,"gs","سیستی که از عصاره‌های پانکراس پر شده باشد، شامل سیست‌های حقیقی پانکراس نمی‌باشد و به کدام نام یاد می‌شود؟",["سیست ولادی","سیست نیوپلاستیک","سیست کاذب (Pseudocyst)","سیست هایداتیک"],3],
+[97,"im","در حالت Nonproliferative Diabetic Retinopathy کدام مورد شامل است؟",["انفصال شبکیه","ادیما / پُکیدگی شبکیه","تشکل عروق جدید","فیبروز شبکیه"],4,"The PDF key marks fibrosis. Retinal edema is a non-proliferative feature, while new vessels and fibrosis belong to the proliferative stage. Check your textbook."],
+[98,"gs","در سوختگی بزرگان، برای تعیین وسعت سوختگی، بر اساس «قانون ۹٪» برای هر طرف سر چند فیصد قبول شده است؟",["۱٪","۱۸٪","۳۶٪","۹٪"],4],
+[99,"im","مهم‌ترین فکتور خطر (عامل خطر) برای COPD کدام است؟",["جنس مذکر","وضعیت اقتصادی پایین","سن بالا","کشیدن سگرت"],4],
+[100,"phy","هورمون پاراتایروئید (PTH) از کدام حجرات غده پاراتایروئید افراز می‌گردد؟",["Para Follicular Cells","Chief Cells","Somatotrop Cells","Follicular Cells"],2],
+[101,"im","کدام مورد زیر از علائم محیطی عدم کفایه دسام ابهر نمی‌باشد؟",["Muller sign","Hills sign","Systolic murmur","Musset sign"],3],
+[102,"ph","انتاگونست دواهای تریاک (Opiates) عبارت است از:",["Flumazenil","Barbiturates","Acetyl Cysteine","Naloxone"],4],
+[103,"ob","خانمی که هیچ‌گاه حمل نگرفته و باردار نشده باشد، به کدام نام یاد می‌شود؟",["Nulligravid","Nullipara","Multipara","Primipara"],1],
+[104,"gs","کانال اساسی و اصلی پانکراس به کدام نام یاد می‌گردد؟",["Santorini duct","Common bile duct","Cystic duct","Wirsung duct"],4],
+[105,"gs","علامه Boas sign در کدام یک از امراض زیر مثبت می‌باشد؟",["هپاتیت","التهاب پانکراس (پانکریتایتس)","التهاب مزمن کیسه صفرا","التهاب حاد کیسه صفرا (Acute cholecystitis)"],4],
+[106,"im","کدام یک از موارد زیر جز میانیزم‌های ادویه Sulphonylurea محسوب نمی‌شود؟",["افزایش افراز انسولین از حجرات بتا","افزایش اتصال انسولین با آخذه‌های انسولین","کاهش افراز گلوکاگون","مانع جذب گلوکوز از روده"],4],
+[107,"ped","در نوزاد مبتلا به یرقان، تغییر رنگ ادرار به چه شکل می‌باشد؟",["شفاف یا بی‌رنگ","زردرنگ","سبزرنگ","سرخ‌رنگ"],3],
+[108,"im","معمول‌ترین علت Mitral regurgitation عبارت است از:",["تب روماتیزمی","اتساع حلقوی دسام (Mitral annular dilation)","پرولاپس دسام میترال (Mitral valve prolapse)","اتساع جوف بطین چپ"],3],
+[109,"ph","کدام یک از ادویه‌جات زیر جز دواهای Bacteriocidal نمی‌باشد؟",["Cephalosporins","Vancomycin","Tetracycline","Aminoglycosides"],3],
+[110,"im","اعراض Bronchial Asthma بیشتر در کدام وقت روز به میان می‌آید؟",["چاشت","شب و صبح وقت","عصر","پیش از چاشت"],2],
+[111,"im","صوتی که در نتیجه تنگی و فرورفتگی لاروهای هوایی به میان می‌آید، کدام است؟",["Crepitation","Pleural rub","Pericardial rub","Wheezing"],4],
+[112,"pub","کمبود ویتامین D در اطفال سبب کدام بیماری می‌گردد؟",["Xerosis","Rickets","Osteomalacia","Scurvy"],2],
+[113,"gs","اگر در یک مریض ترضیض دماغی نمره GCS بین ۹ تا ۱۲ باشد، نشان‌دهنده کدام درجه ترضیض دماغی است؟",["جراحت شدید دماغی","جراحت متوسط دماغی (متوسط ترضیض)","جراحت خیلی شدید","جراحت خفیف دماغی"],2],
+[114,"mic","در مورد باکتری Mycobacterium leprae کدام جمله درست است؟",["اسپور تولید می‌کند","کپسول دارد","حرکت دارد","Acid Fast bacilli می‌باشد"],4],
+[115,"ph","کدام مورد زیر از عوارض جانبی دوای Captopril می‌باشد؟",["Hypomagnesemia","Hypocalcemia","Hyperkalemia","Hypokalemia"],3],
+[116,"gs","هرگاه در یک زخم، پوپک‌های روشندار سرخ‌رنگ و داغ‌مانند به میان آید، به کدام نام یاد می‌شود؟",["خونریزی شریانی","خونریزی وریدی","خونریزی مویرگی (کپیلاری)","انساج گرانولیشن ابتدایی"],4],
+[117,"gs","عبور سنگ صفراوی به مجرای صفراوی (Choledocholithiasis) سبب کدام اختلاط می‌گردد؟",["کولیک صفراوی","گانگرین کیسه صفرا","کلانجیتیس (التهاب مجاری صفراوی)","التهاب حاد کیسه صفرا"],3],
+[118,"im","در معاینات لابراتواری Aplastic Anemia کدام یافته عمده دریافت می‌گردد؟",["Pancytopenia","کمبود Hb","کمبود WBC","پایین آمدن ESR"],1],
+[119,"im","کدام مورد از فکتورهای خطر برای دیابت در دوران حمل (بارداری) محسوب نمی‌شود؟",["چاقی ولادی","تاریخچه ولادت‌های قبلی","دیابت قندی","سن پایین"],4],
+[120,"im","معمول‌ترین نوع Leukemia در اطفال کدام است؟",["AML","CML","CLL","ALL"],4],
+[121,"im","در بیماران مبتلا به بیماری اسکیمیک قلب کدام دوای زیر توصیه نمی‌گردد؟",["CT scan","Serum creatinine","Triglycerides","HbA1C"],1,"The PDF marks no answer for this one. Option 1 is assumed, since a CT scan is not part of the routine work-up for ischemic heart disease. The stem says «drug» but the options are tests."],
+[122,"im","کدام معاینه زیر در تشخیص Pulmonary Embolism (امبولی ریوی) ارزش بلندی دارد؟",["HbA1c","Triglyceride","Serum Creatine","CT-Scan / CT Angiogram"],4],
+[123,"neuro","در اختلالات شخصیتی، کدام نوع اختلال شامل Cluster B می‌باشد؟",["Echocardiography","Border-line","Schezoid","Dependant"],2],
+[124,"gs","سرطان ثدیه (پستان) بیشتر در کدام ربع (چهارک) رُخ می‌دهد؟",["ربع علوی انسی","ربع علوی وحشی","ربع سفلی وحشی","ربع متوسط"],2,"The PDF stem reads «کسور ثدیه»; it is read here as breast cancer."],
+[125,"gs","کدام نوع خلع (خلع مفصل) نادر است؟",["خلع مزمن که ارجاع نشده باشد","خلع پتالوژیک","خلع حاد","خلع ولادی (پیدایشی)"],2,"The PDF stem is garbled. Only the readable part is kept here; the key marks pathological dislocation."],
+[126,"gs","اگر در جوف فتق، اپندیکس التهابی شامل باشد، به کدام نام یاد می‌شود؟",["Littre's hernia","Richter hernia","Omentocele","Amyand hernia"],4],
+[127,"gs","کدام مورد زیر برای ضدعفونی کیمیاوی تجهیزات استفاده می‌شود؟",["استفاده از گلوتار الدیهاید","جوش دادن در آب","استفاده از اوتوکلاف","نور آفتاب"],1],
+[128,"gs","متوقف شدن موقتی وظایف فزیولوژیک دماغ در اثر ضربه شدید، دلالت بر کدام نوع ترضیض می‌کند؟",["Concussion (تکان دماغی)","Protect","Preserve","Prescribe"],1],
+[129,"gs","در کمک‌های اولی، کدام مورد شامل قانون 4P نمی‌باشد؟",["Concussion","Contusion","Laceration","Compression"],1],
+[130,"gs","راه خروجی ادرار از مثانه در اثر سوراخ شدن یا انسداد انسدادی، سبب کدام حالت می‌گردد؟",["Horse Shoe Kidney","فتوق ادراری","هایدرونفروزیس","دیورتیکول مثانه"],3],
+[131,"ob","قرحه ابتدایی بیماری سیفلیس (Syphilis) به کدام نام یاد می‌شود؟",["Keloid","Curling ulcer","Condyloma lata","Chancre (شانکر)"],4],
+[132,"ob","دومین حرکت اساسی در میانیزم ولادت عبارت است از:",["Extension","Engagement","Flexion","Decent"],2],
+[133,"ped","در هایپوکالیمی کدام تغییر در گراف قلب (ECG) دیده می‌شود؟",["Prolong PR interval","Prolong QT interval","Wide QRS complex","Peaked T wave"],4,"The PDF key marks peaked T waves, the classic ECG sign of hyperkalemia. Hypokalemia usually gives flat T waves, U waves and a prolonged QT."],
+[134,"phy","ظرفیت حیاتی (Vital capacity) عبارت است از:",["TV + ERV + IRV","Tidal volume + Expiratory reserve volume / TV + ERV","Tidal volume + Inspiratory reserve volume / TV + IRV","Expiratory reserve volume + Residual volume / ERV + RV"],1],
+[135,"ob","کدام حالت با Placenta Abruptio همراه نمی‌باشد؟",["Polycythemia","Pre-eclampsia","Multiparity","Anemia"],1],
+[136,"ob","کدام علامه یقین‌کننده بارداری (حمل) محسوب می‌شود؟",["قطع شدن عادت ماهوار","احساس حرکات جنین","تشخیص جنین توسط التراسوند","لکه‌بینی"],3],
+[138,"ped","در مریضان مننجیت، کدام مورد زیر از CT-Scan indications محسوب نمی‌شود؟",["حالت کوما به شکل دوام‌دار","داشتن اختلاج بعد از ۲۴ ساعت تداوی مننجیت","عود (نکس) بیماری در مریض","اگر علایم عصبی موضعی موجود باشد"],2,"Option 4 is garbled in the PDF and is read here as focal neurological signs."],
+[139,"ent","بیماری Rhinitis Sicca بیشتر در کدام مسلک یا وظیفه دیده می‌شود؟",["دریوران موتر","شاگردان","دهقانان","آهنگران"],4],
+[140,"ob","حالت زنده بودن جنین در حمل همراه با باز نشدن سرویکس (Internal Os)، اما همراه با خونریزی یا افرازات مهبلی، به کدام نام سقط یاد می‌شود؟",["Inevitable Abortion","Threatened Abortion","Incomplete Abortion","Complete Abortion"],2],
+[141,"ped","اگر طفلی بعد از تطبیق واکسین DPT دچار اختلاج گردد، کدام جز واکسین باعث آن شده است؟",["Pertussis (سیاه‌سرفه)","Polio","Diphtheria","Tetanus"],1],
+[142,"ped","کدام انفلکس (Reflex) در نوزاد تا آخر عمر باقی می‌ماند؟",["Doll's eye reflex","Grasping reflex","Glabellar reflex","Rooting reflex"],1],
+[143,"ped","علامه اساس تشخیصی بیماری کواشیورکور (Kwashiorkor) کدام است؟",["Mental apathy","Erythema","Edema (پکیدگی / ادیما)","Muscle wasting"],3],
+[144,"ped","در طفل مبتلا به بیماری ریکتس (Rickets)، کدام علامه در اطراف سفلی دیده نمی‌شود؟",["Pot belly","Double malleole","Genu valgum","Genu varum"],1],
+[145,"ped","معمول‌ترین عامل Bacillary dysentery در اطفال کدام انتان است؟",["Shigella","امیبیاسیس","کاندیدیاس","جیاردیاس"],1],
+[146,"path","رشد طبقه‌ای قاعده‌ای اندومتریوم به داخل طبقه عضلی رحم به کدام نام یاد می‌شود؟",["Endometriosis","Adenomyosis","Endometrial Polyp","Leiomyoma"],2],
+[147,"an","کدام یک از استخوان‌های زیر در ساختار Calvaria سهم ندارد؟",["Frontal bone","Zygomatic bone","Maxilla bone","Hyoid bone"],4],
+[148,"ped","لکه‌های Forchheimer spot علامه وصفی کدام بیماری ساری است؟",["Mumps (اوریون)","Rubella (سرخکان آلمانی)","Measles (سرخکان)","تب محرقه"],2],
+[149,"pub","اسهال بعد از مصرف شیر به دلیل کمبود کدام انزایم به میان می‌آید؟",["Sucrase","Maltase","Lactase","Amylase"],3],
+[150,"pub","کدام یک از امینواسیدهای زیر غیر ضروری می‌باشد؟",["Methionin","Arginine","Proline","Glutamine"],2,"Proline and glutamine are also non-essential, and arginine is only conditionally essential. The PDF key marks arginine."],
+[151,"neuro","در مقیاس GCS، اگر مریض در جواب به درد موضع درد را مشخص کند، نمره عکس‌العمل حرکی (Motor response) چند است؟",["۳ نمره","۵ نمره","۶ نمره","۴ نمره"],2],
+[152,"neuro","مرحله بین دو حمله صرع (Epilepsy) به کدام نام یاد می‌شود؟",["Post-ictal","Inter-ictal","Aura","Pre-ictal"],2]
+];
+
+var Q=RAW.map(function(r){return {n:r[0],s:r[1],t:r[2],o:r[3],a:r[4]-1,note:r[5]||""};});
+var byN={};Q.forEach(function(q){byN[q.n]=q;});
+var NOTES=Q.filter(function(q){return q.note;}).length;
+
+var app=document.getElementById("app");
+var S=null, timer=null;
+var cfg={mode:"exam",subs:Object.keys(SUBJ),count:"all",shuffle:true,limit:0};
+
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function fa(n){return String(n).replace(/\d/g,function(d){return "۰۱۲۳۴۵۶۷۸۹"[d];});}
+function hasFa(t){return /[؀-ۿ]/.test(t);}
+function pad(n){return n<10?"0"+n:""+n;}
+function fmt(sec){sec=Math.max(0,sec);var h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%60;return (h?h+":"+pad(m):pad(m))+":"+pad(s);}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function reduced(){return window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;}
+
+function load(){try{var r=localStorage.getItem(KEY);return r?JSON.parse(r):null;}catch(e){return null;}}
+function save(){try{if(S)localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function wipe(){try{localStorage.removeItem(KEY);}catch(e){}}
+
+function answered(){return Object.keys(S.ans).length;}
+function stats(){
+  var r=0,w=0,k=0,per={};
+  S.ids.forEach(function(n){
+    var q=byN[n],a=S.ans[n],p=per[q.s]||(per[q.s]={r:0,t:0});
+    p.t++;
+    if(a==null)k++;else if(a===q.a){r++;p.r++;}else w++;
+  });
+  return {r:r,w:w,k:k,per:per,total:S.ids.length};
+}
+
+/* ---------- Setup ---------- */
+function availCount(){return Q.filter(function(q){return cfg.subs.indexOf(q.s)>-1;}).length;}
+
+function setupHTML(){
+  var counts={};Q.forEach(function(q){counts[q.s]=(counts[q.s]||0)+1;});
+  var avail=availCount();
+  var resume="";
+  if(S){
+    if(S.done){
+      var st=stats();
+      resume='<div class="resume"><p><b>Last result:</b> '+st.r+' of '+st.total+' correct ('+Math.round(st.r/st.total*100)+'%).</p><div class="row"><button class="btn" data-act="reopen">Review answers</button></div></div>';
+    }else{
+      resume='<div class="resume"><p><b>Exam in progress:</b> '+answered()+' of '+S.ids.length+' answered.</p><div class="row"><button class="btn primary" data-act="resume">Resume</button><button class="btn ghost" data-act="discard">Discard</button></div></div>';
+    }
+  }
+  var counts2=["all","25","50","100"].map(function(c){
+    var num=c==="all"?avail:+c;
+    var dis=c!=="all"&&num>avail;
+    return '<button data-count="'+c+'" aria-pressed="'+(cfg.count===c)+'"'+(dis?' disabled':'')+'>'+(c==="all"?"All ("+avail+")":c)+'</button>';
+  }).join("");
+  var chips=Object.keys(SUBJ).map(function(k){
+    return '<button class="chip" data-sub="'+k+'" aria-pressed="'+(cfg.subs.indexOf(k)>-1)+'">'+esc(SUBJ[k][0])+' <small>'+(counts[k]||0)+'</small></button>';
+  }).join("");
+  var lim=[0,30,60,90,120,150].map(function(m){return '<option value="'+m+'"'+(cfg.limit===m?' selected':'')+'>'+(m?m+" minutes":"No time limit")+'</option>';}).join("");
+  return ''+
+  '<header class="hero">'+
+    '<p class="eyebrow">12th National Medical Licensing Exam</p>'+
+    '<div class="motif" aria-hidden="true"><span class="bub">'+fa(1)+'</span><span class="bub">'+fa(2)+'</span><span class="bub" style="background:var(--ink);border-color:var(--ink);color:var(--bg)">'+fa(3)+'</span><span class="bub">'+fa(4)+'</span></div>'+
+    '<h1>NMLE Practice Exam</h1>'+
+    '<p>'+Q.length+' questions from your PDF across '+Object.keys(SUBJ).length+' subjects, scored against the answer key printed in it. Fill the bubbles, then check yourself.</p>'+
+  '</header>'+
+  resume+
+  '<section class="panel" aria-label="Exam settings">'+
+    '<div class="field"><label class="lbl" for="pname">Your name</label><input id="pname" class="nameIn" type="text" maxlength="40" autocomplete="name" placeholder="Write your full name" value="'+esc(NAME)+'" aria-describedby="nameerr"><span id="nameerr" class="nameErr" role="alert"></span></div>'+
+    '<div class="field"><span class="lbl">Mode</span><div class="modes">'+
+      '<button class="mode" data-mode="exam" aria-pressed="'+(cfg.mode==="exam")+'"><b>Exam</b><span>Answers stay hidden until you submit.</span></button>'+
+      '<button class="mode" data-mode="practice" aria-pressed="'+(cfg.mode==="practice")+'"><b>Practice</b><span>Each answer is checked as soon as you pick it.</span></button>'+
+    '</div></div>'+
+    '<div class="field"><span class="lbl">Subjects</span><div class="chips">'+chips+'</div>'+
+      '<div class="row"><button class="link" data-act="allsubs">Select all</button><button class="link" data-act="nosubs">Clear</button></div></div>'+
+    '<div class="two">'+
+      '<div class="field"><span class="lbl">Number of questions</span><div class="seg">'+counts2+'</div></div>'+
+      '<div class="field"><span class="lbl">Question order</span><div class="seg"><button data-order="rand" aria-pressed="'+cfg.shuffle+'">Shuffled</button><button data-order="pdf" aria-pressed="'+(!cfg.shuffle)+'">PDF order</button></div></div>'+
+    '</div>'+
+    '<div class="field"><label class="lbl" for="limit">Time limit</label><div><select id="limit">'+lim+'</select></div></div>'+
+    '<div class="row"><button class="btn primary big" data-act="start"'+(avail?'':' disabled')+'>Start '+(cfg.mode==="exam"?"exam":"practice")+'</button>'+(avail?'':'<span class="hint">Pick at least one subject.</span>')+'</div>'+
+  '</section>'+
+  '<p class="fine">Q137 and Q153 are left out because the PDF cuts them off. '+NOTES+' questions carry a «key check» note where the PDF key or wording looks doubtful; the answer used for scoring is always the one marked in the PDF.</p>';
+}
+
+function renderSetup(){
+  clearInterval(timer);
+  app.innerHTML=setupHTML();
+}
+
+/* ---------- Exam ---------- */
+function revealed(n){return S.done||(S.cfg.mode==="practice"&&S.ans[n]!=null);}
+
+function cardHTML(n,i){
+  var q=byN[n],a=S.ans[n],rev=revealed(n);
+  var res=a==null?"skip":(a===q.a?"right":"wrong");
+  var badge="";
+  if(rev)badge='<span class="badge '+res+'">'+(res==="right"?"Correct":res==="wrong"?"Wrong":"Skipped")+'</span>';
+  var clear='';
+  var opts=q.o.map(function(t,k){
+    var cls="opt",mark=fa(k+1);
+    if(rev){
+      cls+=" locked";
+      if(k===q.a){cls+=" right";mark="✓";}
+      else if(k===a){cls+=" wrong";mark="✕";}
+    }else if(k===a)cls+=" sel";
+    var d=hasFa(t)?"rtl":"ltr";
+    return '<label class="'+cls+'" dir="rtl"><input type="radio" name="q'+n+'" value="'+k+'"'+(k===a?' checked':'')+((rev||a!=null)?' disabled':'')+'><span class="bub" aria-hidden="true">'+mark+'</span><span class="txt" dir="'+d+'">'+esc(t)+'</span></label>';
+  }).join("");
+  var note=(rev&&q.note)?'<p class="note"><b>Key check.</b> '+esc(q.note)+'</p>':'';
+  return '<article class="q" id="q'+n+'" data-n="'+n+'" data-res="'+(S.done?res:"")+'">'+
+    '<div class="qh"><span class="qno">'+(i+1)+'</span><span class="tag">'+esc(SUBJ[q.s][0])+'</span>'+badge+clear+'<span class="src">PDF #'+n+'</span></div>'+
+    '<p class="stem" dir="rtl" lang="fa">'+esc(q.t)+'</p>'+
+    '<div class="opts" role="radiogroup" aria-label="Question '+(i+1)+' answers">'+opts+'</div>'+note+
+  '</article>';
+}
+
+function barHTML(){
+  return '<div class="bar" id="bar">'+
+    '<div class="bar-row"><div class="prog"><b id="pc">0</b><span>/ '+S.ids.length+' answered</span></div>'+
+    '<div class="clock mono" id="clock">00:00</div>'+
+    '<button class="btn primary" data-act="ask">'+(S.cfg.mode==="exam"?"Submit":"Finish")+'</button></div>'+
+    '<div class="track"><i id="fill"></i></div>'+
+    '<div class="ask" id="ask" hidden><p id="askmsg"></p><div class="row"><button class="btn primary" data-act="submit">'+(S.cfg.mode==="exam"?"Submit now":"Finish now")+'</button><button class="btn" data-act="cancel">Keep going</button><button class="btn ghost" data-act="next">Go to first unanswered</button></div></div>'+
+  '</div>';
+}
+
+function resultHTML(){
+  var st=stats(),pct=Math.round(st.r/st.total*100);
+  var rows=Object.keys(st.per).sort(function(a,b){return st.per[a].r/st.per[a].t-st.per[b].r/st.per[b].t;}).map(function(k){
+    var p=st.per[k],pc=Math.round(p.r/p.t*100);
+    return '<span class="nm">'+esc(SUBJ[k][0])+'</span><span class="tk"><i class="'+(pc<50?"low":"")+'" style="width:'+pc+'%"></i></span><span class="ct">'+p.r+'/'+p.t+'</span>';
+  }).join("");
+  var missed=st.w+st.k;
+  var f=S.filter||"all";
+  return '<section class="result" id="result">'+
+    '<p class="eyebrow">'+(S.cfg.mode==="exam"?"Exam":"Practice")+' result · '+fmt(S.elapsed)+'</p>'+
+    '<div class="score"><span class="big">'+st.r+'</span><span class="of">/ '+st.total+'</span><span class="pct">'+pct+'%</span></div>'+
+    '<p class="sub">'+st.r+' correct · '+st.w+' wrong · '+st.k+' skipped</p>'+
+    '<div class="subj" role="list" aria-label="Score by subject">'+rows+'</div>'+
+    '<div class="row"><div class="seg"><button data-filter="all" aria-pressed="'+(f==="all")+'">All answers</button><button data-filter="missed" aria-pressed="'+(f==="missed")+'">Wrong and skipped ('+missed+')</button></div></div>'+
+    '<div class="row"><button class="btn primary" data-act="retake"'+(missed?'':' disabled')+'>Retake the '+missed+' missed</button><button class="btn" data-act="newexam">New exam</button></div>'+
+  '</section>';
+}
+
+function renderExam(){
+  var list=S.ids.map(function(n,i){return cardHTML(n,i);}).join("");
+  var end=S.done?'':'<div class="end"><button class="btn primary big" data-act="ask2">'+(S.cfg.mode==="exam"?"Submit exam":"Finish")+'</button><p>Each answer is locked once you choose it.</p></div>';
+  app.innerHTML=(S.done?resultHTML():barHTML())+'<div class="list" id="list" data-filter="'+(S.filter||"all")+'">'+list+'</div>'+end;
+  if(!S.done){updateProgress();updateClock();}
+}
+
+function updateProgress(){
+  var pc=document.getElementById("pc"),fill=document.getElementById("fill");
+  if(pc)pc.textContent=answered();
+  if(fill)fill.style.width=(answered()/S.ids.length*100)+"%";
+}
+function updateClock(){
+  var c=document.getElementById("clock");
+  if(!c||!S)return;
+  if(S.cfg.limit){
+    var left=S.cfg.limit*60-S.elapsed;
+    c.textContent=fmt(left);
+    c.classList.toggle("low",left<=300);
+  }else c.textContent=fmt(S.elapsed);
+}
+function tick(){
+  if(!S||S.done)return;
+  S.elapsed=Math.floor((Date.now()-S.t0)/1000);
+  updateClock();
+  if(S.cfg.limit&&S.elapsed>=S.cfg.limit*60){finish();return;}
+  if(S.elapsed%5===0)save();
+}
+function startTimer(){
+  S.t0=Date.now()-S.elapsed*1000;
+  clearInterval(timer);
+  timer=setInterval(tick,1000);
+  tick();
+}
+
+function startFromSetup(){
+  var pool=Q.filter(function(q){return cfg.subs.indexOf(q.s)>-1;}).map(function(q){return q.n;});
+  if(cfg.shuffle)pool=shuffle(pool);
+  if(cfg.count!=="all")pool=pool.slice(0,+cfg.count);
+  S={cfg:{mode:cfg.mode,limit:cfg.limit,shuffle:cfg.shuffle},ids:pool,ans:{},done:false,filter:"all",elapsed:0};
+  save();renderExam();startTimer();window.scrollTo(0,0);
+}
+
+function finish(){
+  if(!S||S.done)return;
+  S.done=true;S.filter="all";
+  clearInterval(timer);save();record();
+  renderExam();window.scrollTo(0,0);
+}
+
+function firstUnanswered(){
+  for(var i=0;i<S.ids.length;i++)if(S.ans[S.ids[i]]==null)return S.ids[i];
+  return null;
+}
+function openAsk(){
+  var left=S.ids.length-answered();
+  var bar=document.getElementById("ask");
+  if(!bar){
+    window.scrollTo(0,0);
+    bar=document.getElementById("ask");
+  }
+  document.getElementById("askmsg").textContent=left?left+" of "+S.ids.length+" questions are still unanswered. Unanswered questions count as wrong.":"All "+S.ids.length+" questions are answered.";
+  bar.hidden=false;
+  if(window.scrollY>40)window.scrollTo({top:0,behavior:reduced()?"auto":"smooth"});
+}
+
+/* ---------- Events ---------- */
+app.addEventListener("click",function(e){
+  var t=e.target.closest("button");
+  if(!t)return;
+  var d=t.dataset;
+
+  if(d.mode){cfg.mode=d.mode;renderSetup();return;}
+  if(d.sub){
+    var i=cfg.subs.indexOf(d.sub);
+    if(i>-1)cfg.subs.splice(i,1);else cfg.subs.push(d.sub);
+    if(cfg.count!=="all"&&+cfg.count>availCount())cfg.count="all";
+    renderSetup();return;
+  }
+  if(d.count){cfg.count=d.count;renderSetup();return;}
+  if(d.order){cfg.shuffle=d.order==="rand";renderSetup();return;}
+  if(d.filter){S.filter=d.filter;save();renderExam();return;}
+
+  switch(d.act){
+    case "allsubs":cfg.subs=Object.keys(SUBJ);renderSetup();break;
+    case "nosubs":cfg.subs=[];cfg.count="all";renderSetup();break;
+    case "start":
+      if(!NAME.trim()){var ne=document.getElementById("nameerr"),ni=document.getElementById("pname");if(ne)ne.textContent="Please write your name to start.";if(ni)ni.focus();break;}
+      startFromSetup();break;
+    case "resume":renderExam();if(!S.done)startTimer();break;
+    case "reopen":renderExam();window.scrollTo(0,0);break;
+    case "discard":S=null;wipe();renderSetup();break;
+    case "ask":case "ask2":openAsk();break;
+    case "cancel":document.getElementById("ask").hidden=true;break;
+    case "submit":finish();break;
+    case "next":
+      var n=firstUnanswered();
+      document.getElementById("ask").hidden=true;
+      if(n){var el=document.getElementById("q"+n);if(el)el.scrollIntoView({block:"center",behavior:reduced()?"auto":"smooth"});}
+      break;
+    case "clear":
+      break;
+    case "retake":
+      var st=S.ids.filter(function(n){return S.ans[n]!==byN[n].a;});
+      var ids=S.cfg.shuffle?shuffle(st):st;
+      var c=S.cfg;
+      S={cfg:c,ids:ids,ans:{},done:false,filter:"all",elapsed:0};
+      save();renderExam();startTimer();window.scrollTo(0,0);break;
+    case "newexam":S=null;wipe();renderSetup();window.scrollTo(0,0);break;
+  }
+});
+
+app.addEventListener("change",function(e){
+  var el=e.target;
+  if(el.id==="limit"){cfg.limit=+el.value;return;}
+  if(el.type!=="radio"||!S||S.done)return;
+  var art=el.closest(".q"),n=+art.dataset.n;
+  if(revealed(n))return;
+  if(S.ans[n]!=null){art.outerHTML=cardHTML(n,S.ids.indexOf(n));return;}
+  S.ans[n]=+el.value;
+  save();
+  if(S.cfg.mode==="practice"){
+    art.outerHTML=cardHTML(n,S.ids.indexOf(n));
+  }else{
+    var labels=art.querySelectorAll(".opt");
+    for(var k=0;k<labels.length;k++)labels[k].classList.toggle("sel",k===S.ans[n]);
+    var ins=art.querySelectorAll("input");for(var j=0;j<ins.length;j++)ins[j].disabled=true;
+  }
+  updateProgress();
+});
+
+/* ---------- Name, saved results, hidden results page (#results) ---------- */
+var NKEY="nmle-name-v1",RKEY="nmle-results-v1",SHEET_URL="";
+var NAME="";try{NAME=localStorage.getItem(NKEY)||"";}catch(e){}
+function rows(){try{return JSON.parse(localStorage.getItem(RKEY))||[];}catch(e){return [];}}
+function record(){
+  var st=stats(),row={name:NAME.trim(),score:st.r,total:st.total,wrong:st.w,skipped:st.k,pct:Math.round(st.r/st.total*100),mode:S.cfg.mode,seconds:S.elapsed,date:new Date().toISOString()};
+  row.subjects={};Object.keys(st.per).forEach(function(k){row.subjects[SUBJ[k][0]]=st.per[k].r+"/"+st.per[k].t;});
+  try{var a=rows();a.push(row);localStorage.setItem(RKEY,JSON.stringify(a));}catch(e){}
+  if(SHEET_URL){try{fetch(SHEET_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify(row)});}catch(e){}}
+}
+app.addEventListener("input",function(e){
+  if(e.target.id!=="pname")return;
+  NAME=e.target.value;try{localStorage.setItem(NKEY,NAME);}catch(x){}
+  var ne=document.getElementById("nameerr");if(ne&&NAME.trim())ne.textContent="";
+});
+function showResults(){
+  var r=rows().sort(function(a,b){return b.pct-a.pct||(a.date<b.date?1:-1);});
+  var body=r.length?r.map(function(x,i){return '<tr><td>'+(i+1)+'</td><td>'+esc(x.name)+'</td><td>'+x.score+'/'+x.total+'</td><td>'+x.pct+'%</td><td>'+esc(x.mode)+'</td><td>'+esc(new Date(x.date).toLocaleString())+'</td></tr>';}).join(""):'<tr><td colspan="6">No results yet.</td></tr>';
+  var o=document.getElementById("resview");if(o)o.remove();
+  o=document.createElement("div");o.id="resview";
+  o.style.cssText="position:fixed;inset:0;z-index:10000;padding:24px 16px;background:var(--bg);overflow:auto;font-family:var(--f-ui);color:var(--ink)";
+  o.innerHTML='<div style="width:100%;max-width:860px;margin:0 auto"><div style="display:flex;gap:10px;justify-content:space-between;align-items:center;margin-bottom:12px"><h2 style="margin:0;font-size:20px">Saved results</h2><span><button class="btn" id="rvcsv">Export CSV</button> <button class="btn primary" id="rvx">Close</button></span></div>'+
+    '<p style="color:var(--muted);margin:0 0 10px">Stored in this browser only.</p><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;text-align:left"><thead><tr><th>#</th><th>Name</th><th>Score</th><th>%</th><th>Mode</th><th>Date</th></tr></thead><tbody>'+body+'</tbody></table></div></div>';
+  document.body.appendChild(o);
+  o.querySelector("#rvx").onclick=function(){o.remove();if(location.hash==="#results")history.replaceState(null,"",location.pathname+location.search);};
+  o.querySelector("#rvcsv").onclick=function(){
+    var c="Name,Score,Total,Percent,Mode,Date\n"+rows().map(function(x){return ['"'+String(x.name).replace(/"/g,'""')+'"',x.score,x.total,x.pct,x.mode,x.date].join(",");}).join("\n");
+    var a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff"+c],{type:"text/csv"}));a.download="nmle-results.csv";a.click();};
+}
+window.addEventListener("hashchange",function(){if(location.hash==="#results")showResults();});
+
+/* ---------- Boot ---------- */
+S=load();
+if(S&&(!S.ids||!S.ids.length||S.ids.some(function(n){return !byN[n];})))S=null;
+renderSetup();
+if(location.hash==="#results")showResults();
+})();
+</script>
+
+</body></html>
